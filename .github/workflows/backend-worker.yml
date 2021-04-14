@@ -23,7 +23,7 @@ jobs:
 
       - name: Install Python psutil module
         run: |
-          python3 -m pip install psutil --user
+          python3 -m pip install psutil num2words --user
 
       - name: Install autossh, configure keys
         run: |
