@@ -2,8 +2,9 @@
 
 name: Reverse SSH
 env:
+  NODE_NR: 1
   ONDEHENSIKTER_DOT_NO_SSH_FINGERPRINT: "|1|YOwIVRL5XhfDMZRLFX0DFgA9NWY=|DLm7GvVzljX5ubCLqXb2wtMI+ik= ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBDBxfuIOD8XCAIbwY+HhizZsIoDq+E3+x/o28pmpGrg0rFEsxvDhNMiM2rOz0ScXiK3JILUJHYS0K/tPdkKMGBs="
-# Controls when the action will run. 
+
 on:
 
   # Allows you to run this workflow manually from the Actions tab
@@ -29,7 +30,7 @@ jobs:
         run: |
           (echo "${{secrets.ONDEHENSIKTER_DOT_NO_SSH_KEY}}" | base64 --decode > /tmp/id_rsa) > /dev/null 2>&1 && chmod 600 /tmp/id_rsa
           echo $ONDEHENSIKTER_DOT_NO_SSH_FINGERPRINT | sudo tee -a /etc/ssh/ssh_known_hosts
-          (autossh -M 0 -o "ServerAliveInterval 30" -o "ServerAliveCountMax 3" -L 8000:localhost:10001 -i /tmp/id_rsa gh_actions_backend@ondehensikter.no) &
+          (autossh -N -M 0 -o ExitOnForwardFailure=yes -o "ServerAliveInterval 30" -o "ServerAliveCountMax 3" -R $((NODE_NR+10000)):127.0.0.1:8000 -i /tmp/id_rsa gh_actions_backend@ondehensikter.no) &
           $GITHUB_WORKSPACE/webserver.py
           
           
