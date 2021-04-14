@@ -28,7 +28,7 @@ If we hash this {iterations} ({iterations_text}) times with SHA512, we get {hash
         self.wfile.write(response_bytes)
 
 
-httpd = socketserver.TCPServer(('0.0.0.0', 8001), Handler)
+httpd = socketserver.TCPServer(('0.0.0.0', 8000), Handler)
 httpd.serve_forever()
 
 
