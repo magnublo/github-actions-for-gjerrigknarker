@@ -1,8 +1,8 @@
 # This is a basic workflow to help you get started with Actions
 
-name: Reverse SSH
+name: Backend worker \#5
 env:
-  NODE_NR: 1
+  NODE_NR: 5
   ONDEHENSIKTER_DOT_NO_SSH_FINGERPRINT: "|1|YOwIVRL5XhfDMZRLFX0DFgA9NWY=|DLm7GvVzljX5ubCLqXb2wtMI+ik= ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBDBxfuIOD8XCAIbwY+HhizZsIoDq+E3+x/o28pmpGrg0rFEsxvDhNMiM2rOz0ScXiK3JILUJHYS0K/tPdkKMGBs="
 
 on:
