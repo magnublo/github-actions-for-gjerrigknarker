@@ -12,7 +12,7 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         self.send_response(HTTPStatus.OK)
         self.end_headers()
         current_time=str(datetime.datetime.now())
-        iterations=10000
+        iterations=100
         hash_result = current_time
         for i in range(iterations):
             hash_result = hashlib.sha512(hash_result.encode('utf-8')).hexdigest()
