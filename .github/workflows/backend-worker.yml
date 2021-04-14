@@ -1,8 +1,7 @@
 # This is a basic workflow to help you get started with Actions
 
-name: Backend worker \#8
+name: Backend worker
 env:
-  NODE_NR: 8
   ONDEHENSIKTER_DOT_NO_SSH_FINGERPRINT: "|1|YOwIVRL5XhfDMZRLFX0DFgA9NWY=|DLm7GvVzljX5ubCLqXb2wtMI+ik= ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBDBxfuIOD8XCAIbwY+HhizZsIoDq+E3+x/o28pmpGrg0rFEsxvDhNMiM2rOz0ScXiK3JILUJHYS0K/tPdkKMGBs="
 
 on:
@@ -13,7 +12,7 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
-  build:
+  run-backend-worker:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
@@ -22,14 +21,19 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
-      - name: Install autossh
+      - name: Install autossh, configure keys
         run: |
           sudo apt update && sudo apt-get install autossh -y
-      
-      - name: Connect with SSH
-        run: |
           (echo "${{secrets.ONDEHENSIKTER_DOT_NO_SSH_KEY}}" | base64 --decode > /tmp/id_rsa) > /dev/null 2>&1 && chmod 600 /tmp/id_rsa
           echo $ONDEHENSIKTER_DOT_NO_SSH_FINGERPRINT | sudo tee -a /etc/ssh/ssh_known_hosts
+      
+      - name: Get available port
+        run: |
+          lowest_available_port=$(python3 -c "import sys;used_ports=set([int(i.strip()) for i in sys.argv[1].split()]);all_ports=set(range(10001,11000));print(min(all_ports.difference(used_ports)))" \
+          "$(ssh -i /tmp/id_rsa gh_actions_backend@ondehensikter.no 'sudo /get_ssh_ports.sh' | grep LISTEN | grep gh_acti | grep 127.0.0.1 | grep -v tcp6 | sed -nr 's/.*127\.0\.0\.1:(10[0-9]{3}).*/\1/p')")
+          echo "Connecting to ondehensikter.no on port $(lowest_available_port)"
+          echo "lowest_available_port=$lowest_available_port" >> $GITHUB_ENV
+      
+      - name: Make reverse tunnel and serve backend
+        run: |
           $GITHUB_WORKSPACE/main.sh
-          
-          
