@@ -23,7 +23,7 @@ jobs:
 
       - name: Install Pyton psutils module
         run: |
-          python3 -m pip install psutils --user
+          python3 -m pip install psutil --user
 
       - name: Install autossh, configure keys
         run: |
