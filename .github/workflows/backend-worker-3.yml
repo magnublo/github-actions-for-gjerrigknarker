@@ -30,7 +30,6 @@ jobs:
         run: |
           (echo "${{secrets.ONDEHENSIKTER_DOT_NO_SSH_KEY}}" | base64 --decode > /tmp/id_rsa) > /dev/null 2>&1 && chmod 600 /tmp/id_rsa
           echo $ONDEHENSIKTER_DOT_NO_SSH_FINGERPRINT | sudo tee -a /etc/ssh/ssh_known_hosts
-          (autossh -N -M 0 -o ExitOnForwardFailure=yes -o "ServerAliveInterval 30" -o "ServerAliveCountMax 3" -R $((NODE_NR+10000)):127.0.0.1:8000 -i /tmp/id_rsa gh_actions_backend@ondehensikter.no) &
-          $GITHUB_WORKSPACE/webserver.py
+          $GITHUB_WORKSPACE/main.sh
           
           
