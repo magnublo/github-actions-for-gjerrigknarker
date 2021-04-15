@@ -12,7 +12,7 @@ from num2words import num2words
 
 from settings import HASH_ITERATIONS
 
-LISTENING_PORT = os.getenv('PYTHON_PORT', 8000)
+LISTENING_PORT = int(os.getenv('PYTHON_PORT', 8000))
 
 
 def get_hex_red(cpu_percent):
