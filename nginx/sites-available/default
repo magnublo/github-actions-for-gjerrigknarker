@@ -1,0 +1,78 @@
+
+
+    upstream gh_actions_backend {
+        server 127.0.0.1:10001 max_fails=3 fail_timeout=3s;
+        server 127.0.0.1:10002 max_fails=3 fail_timeout=3s;
+        server 127.0.0.1:10003 max_fails=3 fail_timeout=3s;
+        server 127.0.0.1:10004 max_fails=3 fail_timeout=3s;
+        server 127.0.0.1:10005 max_fails=3 fail_timeout=3s;
+        server 127.0.0.1:10006 max_fails=3 fail_timeout=3s;
+        server 127.0.0.1:10007 max_fails=3 fail_timeout=3s;
+        server 127.0.0.1:10008 max_fails=3 fail_timeout=3s;
+        server 127.0.0.1:10009 max_fails=3 fail_timeout=3s;
+        server 127.0.0.1:10010 max_fails=3 fail_timeout=3s;
+        server 127.0.0.1:10011 max_fails=3 fail_timeout=3s;
+        server 127.0.0.1:10012 max_fails=3 fail_timeout=3s;
+        server 127.0.0.1:10013 max_fails=3 fail_timeout=3s;
+        server 127.0.0.1:10014 max_fails=3 fail_timeout=3s;
+        server 127.0.0.1:10015 max_fails=3 fail_timeout=3s;
+        server 127.0.0.1:10016 max_fails=3 fail_timeout=3s;
+    }
+
+server {
+	listen 80 default_server;
+	listen [::]:80 default_server;
+
+
+	root /var/www/html;
+
+	index index.html index.htm index.nginx-debian.html;
+
+	server_name _;
+
+	location / {
+		try_files $uri $uri/ =404;
+	}
+
+
+}
+
+
+
+server {
+
+
+	root /var/www/html;
+
+	index index.html index.htm index.nginx-debian.html;
+    server_name ondehensikter.no; # managed by Certbot
+
+
+	location / {
+		proxy_pass http://gh_actions_backend;
+	}
+
+
+
+
+    listen [::]:443 ssl ipv6only=on; # managed by Certbot
+    listen 443 ssl; # managed by Certbot
+    ssl_certificate /etc/letsencrypt/live/ondehensikter.no/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/ondehensikter.no/privkey.pem; # managed by Certbot
+    include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+
+}
+server {
+    if ($host = ondehensikter.no) {
+        return 301 https://$host$request_uri;
+    } # managed by Certbot
+
+
+	listen 80 ;
+	listen [::]:80 ;
+    server_name ondehensikter.no;
+    return 404; # managed by Certbot
+
+
+}
